@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>simulating bivariate data</title>
+    
+    <link rel="stylesheet" href="bivariate.css" />
+    <link rel="stylesheet" href="default.min.css" />
+    <script src="highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>    
+    <script src="d3.v6.min.js"></script>
+    <script type="text/javascript" id="MathJax-script"
+	    async src="tex-svg.js"></script>
+  </head>
+  
+  <body>
+    <div class="fulldiv">
+      <div class="tab">
+	<button class="tablinks" id="plotbut"
+		onclick="openTab(event, 'plot')">plot</button>
+	<button class="tablinks" onclick="openTab(event, 'math')">math</button>
+	<button class="tablinks" onclick="openTab(event, 'code')">code</button>
+	<button class="tablinks" onclick="openTab(event, 'help')">help</button>
+	<button class="tablinks" onclick="openTab(event, 'about')">about</button>
+      </div>
+
+      <div class="screen">
+	<div class="tabcontent" id="plot">
+	  <div id="dataviz_area"></div>
+	</div>
+
+	<div class="tabcontent" id="math">
+	  \(\begin{bmatrix}x_i \\ y_i\end{bmatrix} \sim \mathcal{N}\left(
+	  \begin{bmatrix}\mu_x \\ \mu_y \end{bmatrix},
+	  \mathbf{\Sigma} = \begin{bmatrix}\sigma_x^2 & \rho \sigma_x \sigma_y \\
+	  \rho \sigma_y \sigma_x & \sigma_y^2 
+	  \end{bmatrix}
+	  \right) \)
+
+	  <p>Pairs of observations \(x_i, y_i\) are drawn from a bivariate normal distribution with means
+	    \(\mu_x, \mu_y\) and variance-covariance matrix \(\mathbf{\Sigma}\).</p>
+
+	  <dl>
+	    <dt>\(\rho\)</dt>
+	    <dd>"rho", correlation coefficient</dd>
+	    <dt>\(\sigma_x\)</dt>
+	    <dd>"sigma x", standard deviation of x</dd>
+	    <dt>\(\sigma_y\)</dt>
+	    <dd>"sigma y", standard deviation of y</dd>
+	    <dt>\(\mu_x\)</dt>
+	    <dd>"mu x", mean of x</dd>
+	    <dt>\(\mu_y\)</dt>
+	    <dd>"mu y", mean of y</dd>
+	  </dl>
+	  
+	</div>
+
+	<div class="tabcontent" id="code">
+	  <pre><code id="rcode" class="R"></code></pre></div>
+
+	<div class="tabcontent" id="help">
+	  <dl>
+	    <dt>plot</dt>
+	    <dd>darker rings = greater probability; points are 100 random x,y pairs</dd>
+	    <dt>math</dt>
+	    <dd>math behind the simulation</dd>
+	    <dt>code</dt>
+	    <dd>R code for simulation</dd>
+	  </dl>
+	  <hr/>
+	  <dl>
+	    <dt>\(\rho\)</dt>
+	    <dd>"rho", correlation coefficient</dd>
+	    <dt>\(\sigma_x\)</dt>
+	    <dd>"sigma x", standard deviation of x</dd>
+	    <dt>\(\sigma_y\)</dt>
+	    <dd>"sigma y", standard deviation of y</dd>
+	    <dt>\(\mu_x\)</dt>
+	    <dd>"mu x", mean of x</dd>
+	    <dt>\(\mu_y\)</dt>
+	    <dd>"mu y", mean of y</dd>
+	  </dl>
+	</div>
+
+	<div class="tabcontent" id="about">
+	  <h3>simulating bivariate data</h3>
+	  <p>A web app created in <a href="https://d3js.org">d3.js</a> by <a href="https://www.gla.ac.uk/researchinstitutes/neurosciencepsychology/staff/dalebarr/">Dale J. Barr</a></p>
+	  <a href="https://creativecommons.org/licenses/by/3.0/legalcode.txt"><img src="cc-by.svg"/></a>
+	</div>
+	
+      </div> <!-- screen -->
+      
+      <div>
+	<div id="button">
+	  <input name="sample" type="button" value="new sample"
+		 onclick="new_sample()" />
+	  <input name="reset" type="button" value="reset"
+		 onclick="reset()" />
+	</div>
+	
+	<div class="slidecontainer1">
+	  <label for="slider_rho2">\(\rho = \)</label>      
+	  <label for="slider_rho2" id="rho_value">+0.00</label>      
+	  <input type="range" min="-1" max="1" value="0" step="0.05"
+		 class="slider" id="slider_rho2" oninput="rho_change(this.value)" />
+	</div>
+
+	<div class="slidecontainer2">
+	  <label for="slider_sx2">\(\sigma_x =\)</label>      
+	  <label for="slider_sx2" id="sx_value">1.00</label>
+	  <input type="range" min=".5" max="1.5" value="1" step="0.05"
+		 class="slider" id="slider_sx2" oninput="sx_change(this.value)" />
+	</div>
+
+	<div class="slidecontainer3">
+	  <label for="slider_sy2">\(\sigma_y =\)</label>
+	  <label for="slider_sy2" id="sy_value">1.00</label>
+	  <input type="range" min=".5" max="1.5" value="1" step="0.05"
+		 class="slider" id="slider_sy2" oninput="sy_change(this.value)" />
+	</div>
+
+	<div class="slidecontainer4">
+	  <label for="slider_mx2">\(\mu_x =\)</label>      
+	  <label for="slider_mx2" id="mx_value">+0.00</label>
+	  <input type="range" min="-2" max="2" value="0" step="0.1"
+		 class="slider" id="slider_mx2" oninput="mx_change(this.value)" />
+	</div>
+
+	<div class="slidecontainer5">
+	  <label for="slider_my2">\(\mu_y =\)</label>      
+	  <label for="slider_my2" id="my_value">+0.00</label>
+	  <input type="range" min="-2" max="2" value="0" step="0.1"
+		 class="slider" id="slider_my2" oninput="my_change(this.value)" />
+	</div>
+      </div>
+    </div>    
+  </body>
+
+  <script src="bivariate.js"></script>
+  
+</html>
